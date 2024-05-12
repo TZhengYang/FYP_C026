@@ -538,7 +538,7 @@ class GenerativeResnet(GraspModel):
             width_output = self.width_output(x)
 
         return pos_output, cos_output, sin_output, width_output
-       
+
 
 class GraspRectangles:
     """
@@ -1002,12 +1002,13 @@ def execute_validation(model, computation_device, dataset, match_threshold):
                 gt_bbs = GraspRectangles.load_from_array(dataset.dataset.get_gtbb(didx, rotation, zoom))
             else:
             	gt_bbs = dataset.dataset.get_gtbb(didx, rotation, zoom)
-            gs = detect_grasps(q_out, ang_out, width_img=w_out, no_grasps=1)
+            	gs = detect_grasps(q_out, ang_out, width_img=w_out, no_grasps=1)
+                
             for g in gs:
             	if g.max_iou(gt_bbs) > 0.25:
             		success= True
-            else:
-            	success= False
+            	else:
+            		success= False
 
 
             if success:
@@ -1155,7 +1156,7 @@ def run(): #handling info from input #d - the main function to be ran
                         help='Network name in inference/models')
     parser.add_argument('--input-size', type=int, default=224,
                         help='Input image size for the network')
-    parser.add_argument('--use-depth', type=int, default=1,
+    parser.add_argument('--use-depth', type=int, default=0,
                         help='Use Depth image for training (1/0)')
     parser.add_argument('--use-rgb', type=int, default=1,
                         help='Use RGB image for training (1/0)')
@@ -1189,7 +1190,7 @@ def run(): #handling info from input #d - the main function to be ran
                         help='Training epochs')
     parser.add_argument('--batches-per-epoch', type=int, default=1000,
                         help='Batches per Epoch')
-    parser.add_argument('--optim', type=str, default='adam',
+    parser.add_argument('--optim', type=str, default='sgd',
                         help='Optmizer for the training. (adam or SGD)')
 
     # Logging etc.
